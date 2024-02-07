@@ -1,0 +1,18 @@
+version: '3.5'
+
+services:
+  postgres:
+    image: postgres:16.1-alpine
+    container_name: rachock
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: personnel  # Название бд
+    volumes:
+      - pg_data:/var/lib/postgresql/data  
+
+volumes:
+  pg_data:  # Чтобы изменить данные  нужно сделать 
+            # Для просмотра информации о бд нужно использовать: docker exec -it tesak psql -U tkach -d cinema, после \du или \l
