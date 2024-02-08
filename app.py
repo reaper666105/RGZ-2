@@ -35,7 +35,7 @@ def start():
 def main():
     username = session.get('username')
 
-     # Получение параметров для поиска
+    # Получение параметров для поиска
     search_term = request.args.get('search', '')
 
     # Получение параметра для сортировки
