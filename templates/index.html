@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
+    <style>
+        a {
+            position: relative;
+            margin: 0vw 2.5vw 0vw 2.5vw;
+            text-decoration: none;
+            color:blueviolet
+        }
+
+        button {
+            border: 3px solid blueviolet;
+            border-radius: 15px;
+            background-color: black;
+            color: blueviolet;
+        }
+
+        .logout {
+            position: relative;
+        top: 2vw;
+        width: 30vw;
+        height: 12vw;
+        left: 34vw;
+        }
+
+        .initiative {
+            border: 1px solid blueviolet;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header style="height: 3vw;">
+        <span style="font-size: 3vw;">Сотрудники</span>
+        <a href="/app/new_employee">Сделать новую карточку</a>
+        
+        <button style="position: relative; left: 3vw;" href="">
+            <a href="/app/login" target="_self">Логин</a>
+        </button>
+        
+        <button style="color: white; background-color: blueviolet; left: 5vw; position: relative;" href="">
+            <a style="color: white" href="/app/register" target="_self">Регистрация</a>
+        </button>
+        <span style="right: -7vw; position: relative; color:green">{{ name }}</span>
+
+        <form style="position: relative; top: -1.7vw; right: -88vw;" action="{{ url_for('logout') }}" method="post">
+            <button type="submit">Выйти</button>
+        </form>
+
+    </header>
+    
+    <main>
+        {% if current_page > 1 %}
+            <a href="{{ url_for('main', page=current_page-1) }}">« Предыдущая</a>
+        {% endif %}
+    
+        Страница {{ current_page }} из {{ total_pages }}
+
+        {% if current_page < total_pages %}
+            <a href="{{ url_for('main', page=current_page+1) }}">Следующая »</a>
+        {% endif %}
+
+        <form action="{{ url_for('main') }}" method="get">
+            <input type="text" name="search" placeholder="Поиск" value="{{ search_term }}">
+            <button type="submit">Искать</button>
+        </form>
+
+        <a href="{{ url_for('main', page=current_page, search=search_term, sort='full_name') }}">Сортировать по имени</a>
+        <a href="{{ url_for('main', page=current_page, search=search_term, sort='position') }}">Сортировать по должности</a>
+        <a href="{{ url_for('main', page=current_page, search=search_term, sort='gender') }}">Сортировать по полу</a>
+
+        <h2>Список сотрудников:</h2>
+        {% for employee in employees_data %}
+    <div>
+        <h2>{{ employee.employee_id }}</h2>
+        <h2>{{ employee.full_name }}</h2>
+        <p><strong>Должность:</strong> {{ employee.position }}</p>
+        <p><strong>Пол:</strong> {{ employee.gender }}</p>
+        <p><strong>Телефон:</strong> {{ employee.phone }}</p>
+        <p><strong>Email:</strong> {{ employee.email }}</p>
+        <p><strong>На испытательном сроке:</strong> {% if employee.on_probation %}Да{% else %}Нет{% endif %}</p>
+        <p><strong>Дата устройства на работу:</strong> {{ employee.hire_date }}</p>
+        
+        <a href="{{ url_for('edit_employee', employee_id=employee.employee_id) }}">Редактировать</a>
+        <a href="{{ url_for('delete_employee', employee_id=employee.employee_id) }}">Удалить</a>
+    </div>
+    {% endfor %}
+
+        {% if initiatives|length == per_page %}
+            <a style="border: 3px solid blueviolet" href="{{ url_for('main', page=current_page + 1) }}" id="load-more-btn">Загрузить еще</a>
+        {% endif %}
+        <br>
+    </main>
+    <br>
+    <footer style="position: relative; top: 2vw;">
+        Сотрудники
+    </footer>
+    
+</body>
+</html>

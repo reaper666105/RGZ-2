@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
+    <style>
+        a {
+            position: relative;
+            margin: 0vw 2.5vw 0vw 2.5vw;
+            text-decoration: none;
+            color:blueviolet
+        }
+
+        button {
+            border: 3px solid blueviolet;
+            border-radius: 15px;
+            background-color: black;
+            color: blueviolet;
+        }
+
+        .logout {
+            position: relative;
+        top: 2vw;
+        width: 30vw;
+        height: 12vw;
+        left: 34vw;
+        }
+
+        .initiative {
+            border: 1px solid blueviolet;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header style="height: 4vw;">
+        <span style="font-size: 3vw;">Сотрудники</span>
+        <a href="/app/new_employee">Сделать новую карточку</a>
+        
+        <button style="position: relative; left: 3vw;" href="">
+            <a href="/app/login" target="_self">Логин</a>
+        </button>
+        
+        <button style="color: white; background-color: blueviolet; left: 5vw; position: relative;" href="">
+            <a style="color: white" href="/app/register" target="_self">Регистрация</a>
+        </button>
+        <span style="right: -7vw; position: relative; color:green">{{ name }}</span>
+
+        <form style="position: relative; top: -1.7vw; right: -88vw;" action="{{ url_for('logout') }}" method="post">
+            <button type="submit">Выйти</button>
+        </form>
+
+    </header>
+
+    <main>
+
+<h1>Создание новой карточки сотрудника</h1>
+
+{% if errors %}
+    <ul style="color: red;">
+        {% for error in errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+
+<form method="POST" action="{{ url_for('create_employee') }}">
+    <label for="full_name">ФИО:</label>
+    <input type="text" id="full_name" name="full_name" required><br>
+
+    <label for="position">Должность:</label>
+    <input type="text" id="position" name="position" required><br>
+
+    <label for="gender">Пол:</label>
+    <select id="gender" name="gender" required>
+        <option value="male">Мужской</option>
+        <option value="female">Женский</option>
+    </select><br>
+
+    <label for="phone">Телефон:</label>
+    <input type="text" id="phone" name="phone" required><br>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br>
+
+    <label for="on_probation">На испытательном сроке:</label>
+    <input type="checkbox" id="on_probation" name="on_probation"><br>
+
+    <label for="hire_date">Дата устройства на работу:</label>
+    <input type="date" id="hire_date" name="hire_date" required><br>
+
+    <button type="submit">Создать карточку сотрудника</button>
+</form>
+{% endif %}
+
+<br>
+
+</main>
+<footer style="position: relative; top: 2vw;">Сотрудники
+</footer>
+
+</body>
+</html>

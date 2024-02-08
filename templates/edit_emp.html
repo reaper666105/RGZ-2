@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование карточки сотрудника</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
+    <style>
+        a {
+            position: relative;
+            margin: 0vw 2.5vw 0vw 2.5vw;
+            text-decoration: none;
+            color:blueviolet
+        }
+
+        button {
+            border: 3px solid blueviolet;
+            border-radius: 15px;
+            background-color: black;
+            color: blueviolet;
+        }
+
+        .logout {
+            position: relative;
+        top: 2vw;
+        width: 30vw;
+        height: 12vw;
+        left: 34vw;
+        }
+
+        .initiative {
+            border: 1px solid blueviolet;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<header style="height: vw;">
+    <span style="font-size: 3vw;">Сотрудники</span>
+    
+    <button style="position: relative; left: 3vw;" href="">
+        <a href="/app/login" target="_self">Логин</a>
+    </button>
+    
+    <button style="color: white; background-color: blueviolet; left: 5vw; position: relative;" href="">
+        <a style="color: white" href="/app/register" target="_self">Регистрация</a>
+    </button>
+    <span style="right: -7vw; position: relative; color:green">{{ name }}</span>
+
+
+</header>
+<body>
+    <h1>Редактирование карточки сотрудника</h1>
+
+    {% if errors %}
+        <ul style="color: red;">
+            {% for error in errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('edit_employee', employee_id=employee.employee_id) }}">
+        <label for="full_name">ФИО:</label>
+        <input type="text" id="full_name" name="full_name" value="{{ employee.full_name }}" required><br>
+
+        <label for="position">Должность:</label>
+        <input type="text" id="position" name="position" value="{{ employee.position }}" required><br>
+
+        <label for="gender">Пол:</label>
+        <select id="gender" name="gender" required>
+            <option value="male" {% if employee.gender == 'male' %}selected{% endif %}>Мужской</option>
+            <option value="female" {% if employee.gender == 'female' %}selected{% endif %}>Женский</option>
+        </select><br>
+
+        <label for="phone">Телефон:</label>
+        <input type="text" id="phone" name="phone" value="{{ employee.phone }}" required><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{ employee.email }}" required><br>
+
+        <label for="on_probation">На испытательном сроке:</label>
+        <input type="checkbox" id="on_probation" name="on_probation" {% if employee.on_probation %}checked{% endif %}><br>
+
+        <label for="hire_date">Дата устройства на работу:</label>
+        <input type="date" id="hire_date" name="hire_date" value="{{ employee.hire_date }}" required><br>
+
+        <button type="submit">Сохранить изменения</button>
+    </form>
+
+    <br>
+
+    <a href="{{ url_for('main') }}">На главную</a>
+</body>
+<footer style="position: relative; top: 2vw;">
+    <a href="{{ url_for('main') }}">На главную</a> Сотрудники
+</footer>
+</html>
