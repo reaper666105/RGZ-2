@@ -1,5 +1,4 @@
 from flask import Flask, url_for, render_template, redirect, session, request
-from werkzeug.security import check_password_hash, generate_password_hash
 from Db import db
 from Db.models import hr_officers, employees
 from flask_migrate import Migrate
@@ -75,36 +74,6 @@ def main():
     return render_template('index.html', name=username, employees_data=employees_data, current_page=page, search_term=search_term, total_pages=total_pages)
 
 
-@app.route('/app/register', methods=['GET', 'POST'])
-def registerPage():
-    errors = []
-
-    if request.method == 'GET':
-        return render_template("register.html", errors=errors)
-
-    username = request.form.get("username")
-    password = request.form.get("password")
-
-    if not (username or password):
-        errors.append("Пожалуйста, заполните все поля")
-        print(errors)
-        return render_template("register.html", errors=errors)
-   
-    existing_user = hr_officers.query.filter_by(username=username).first()
-
-    if existing_user:
-        errors.append('Пользователь с данным именем уже существует')
-        return render_template('register.html', errors=errors, resultСur=existing_user)
-
-    hashed_password = generate_password_hash(password)
-
-    new_user = hr_officers(username=username, password=hashed_password)
-    db.session.add(new_user)
-    db.session.commit()
-
-    return redirect("/app/login")
-
-
 @app.route('/app/login', methods=["GET", "POST"])
 def loginPage():
     errors = []
@@ -121,7 +90,7 @@ def loginPage():
 
     user = hr_officers.query.filter_by(username=username).first()
 
-    if user is None or not check_password_hash(user.password, password):
+    if user is None or user.password != password:
         errors.append('Неправильный пользователь или пароль')
         return render_template("login.html", errors=errors)
 
@@ -134,7 +103,7 @@ def loginPage():
 @app.route('/logout', methods=['POST'])
 def logout():
     session.clear()
-    return redirect(url_for('loginPage'))
+    return redirect(url_for('main'))
 
 
 @app.route('/app/new_employee', methods=['GET', 'POST'])
@@ -190,7 +159,7 @@ def edit_employee(employee_id):
 
     if username is None:
         errors.append('Пожалуйста, авторизуйтесь')
-        return render_template('edit_emp.html', errors=errors)
+        return render_template('login.html', errors=errors)
 
     employee = employees.query.get_or_404(employee_id)
 
